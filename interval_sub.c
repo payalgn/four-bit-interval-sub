@@ -4,7 +4,7 @@
 
 int sanity(int low, int high)
 {
-// checking low and high within 0 to 15 and low == high
+// checking low and high within 0 to 15 and low >= high
 
         int ret = 0;
 
@@ -12,7 +12,7 @@ int sanity(int low, int high)
                 ret = -1;
         if(low>15 || high>15)
                 ret = -1;
-        if(low==high)
+        if(low>=high)
                 ret = -1;
         return ret;
 }
@@ -55,7 +55,12 @@ main(int argc, char *argv[])
         inter_high = high_out+16;
     else
         inter_high = high_out;
-    
+
+    if(inter_low == inter_high){
+        low_out = 0;
+        high_out = 15;
+    }
+
     printf("output interval domain = { %d,%d } --> ",inter_low, inter_high);
     printf("{");
     for(i = low_out;i<=high_out;i++){
@@ -67,3 +72,13 @@ main(int argc, char *argv[])
     printf("}\n");
   }
 
+/* Sample input and output
+$ ./int_sub 1 15 0 2
+output interval domain = { 15,15 } --> {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,}
+$ ./int_sub 3 8 1 7
+output interval domain = { 12,7 } --> {12,13,14,15,0,1,2,3,4,5,6,7,}
+$ ./int_sub 6 12 9 0
+Check arguments for second tuple
+$ ./int_sub 6 12 1 3
+output interval domain = { 3,11 } --> {3,4,5,6,7,8,9,10,11,}
+*/
