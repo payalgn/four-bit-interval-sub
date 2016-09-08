@@ -4,7 +4,7 @@
 
 int sanity(int low, int high)
 {
-// checking low and high within 0 to 15 and low<high
+// checking low and high within 0 to 15 and low == high
 
         int ret = 0;
 
@@ -12,9 +12,8 @@ int sanity(int low, int high)
                 ret = -1;
         if(low>15 || high>15)
                 ret = -1;
-        if(low>=high)
+        if(low==high)
                 ret = -1;
-
         return ret;
 }
 
@@ -39,10 +38,15 @@ main(int argc, char *argv[])
         printf("Check arguments for second tuple\n");
         exit(1);
     }
-
+    // Checking for wrap arounds ... if low>high then it has wrapped around from -ve
+    if(low1>high1)
+        low1 = low1-16;
+    if(low2>high2)
+        low2 = low2-16;
     // Interval subtraction (low1,high1) - (low2,high2) = (low1-high2, high1-low2)
     low_out = low1-high2;
     high_out = high1-low2;
+    // wrapping around for overflow
     if(low_out < 0)
         inter_low = low_out+16;
     else
@@ -52,7 +56,7 @@ main(int argc, char *argv[])
     else
         inter_high = high_out;
     
-    printf("output interval domain = { %d,%d } --> ",low_out, high_out);
+    printf("output interval domain = { %d,%d } --> ",inter_low, inter_high);
     printf("{");
     for(i = low_out;i<=high_out;i++){
         if(i<0)
